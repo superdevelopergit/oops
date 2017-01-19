@@ -1,0 +1,656 @@
+WordPress?
+
+Initial release 	May 27, 2003;
+Stable release 	4.7.1 (January 11, 2017)
+
+
+Releases Category Archive
+January 11, 2017	WordPress 4.7.1 Security and Maintenance Release
+November 11, 2016	WordPress 4.7 Beta 3
+November 4, 2016	WordPress 4.7 Beta 2
+October 28, 2016	WordPress 4.7 Beta 1
+September 7, 2016	WordPress 4.6.1 Security and Maintenance Release
+
+WordPress is an online, open source website creation tool written in PHP. 
+But in non-geek speak, it's probably the easiest and most powerful blogging and website content management system (or CMS) in existence today.
+
+
+
+plugin?
+resources
+http://www.stilson.net/documentation/Professional%20WordPress,%202nd%20Edition.pdf
+https://github.com/williamsba/HalloweenStore.
+
+
+A plugin is a piece of software containing a group of functions that can be added to a WordPress website. 
+They can extend functionality or add new features to your WordPress websites. 
+WordPress plugins are written in the PHP programming language and integrate seamlessly with WordPress.
+
+WordPress Plugin: A WordPress Plugin is a program, or a set of one or more functions, written in the PHP scripting language, 
+that adds a specific set of features or services to the WordPress site, 
+which can be seamlessly integrated with the site using access points and methods provided by the WordPress Plugin Application Program Interface (API). 
+
+Create Plugin--->
+To create a plugin, all you need to do is create a folder and then create a single file with one line of content. 
+Navigate to the wp-content/plugins folder, and create a new folder named awesomeplugin. 
+Inside this new folder, create a file named awesomeplugin.php. Open the file in a text editor, and paste the following information in it:
+
+
+Creating a Plugin Example
+1)plugin
+<?php
+   /*
+   Plugin Name: Awesomeness Creator
+   Plugin URI: http://my-awesomeness-emporium.com
+   Description: a plugin to create awesomeness and spread joy
+   Version: 1.2
+   Author: Mr. Awesome
+   Author URI: http://mrtotallyawesome.com
+   License: GPL2
+   */
+?>
+
+
+2)plugin
+
+
+<?php
+/*
+Plugin Name: Halloween Store
+Plugin URI: http://webdevstudios.com/support/wordpress-plugins/
+Description: Create a Halloween Store to display product information
+Version: 1.0
+Author: Brad Williams
+Author URI: https://webdevstudios.com
+License: GPLv2
+*/
+
+As you can see, you created the appropriate plugin header for your new plugin. Because you will be 
+releasing this plugin, you’ll want to include the GPL software license below your plugin header.
+Next you are going to call the 
+register_activation_hook()
+ function to set up your default plugin 
+settings. Remember that this function is triggered when a user activates your plugin in WordPress.
+
+
+// Call function when plugin is activated
+register_activation_hook( __FILE__, 'halloween_store_install' );
+function halloween_store_install() {
+    //setup default option values
+    $hween_options_arr = array(
+        'currency_sign' => '$'
+    );
+    //save our default option values
+    update_option( 'halloween_options', $hween_options_arr );
+}
+
+As you can see, this plugin will store an array of settings in a single option called 
+halloween_options
+. When the plugin is activated, you set the default currency_signvalue to $
+
+
+Next, you call the init hook to register the custom post type for Products. 
+This is how you will add and manage your Halloween Store products. 
+
+// Action hook to initialize the plugin
+add_action( 'init', 'halloween_store_init' );
+
+
+//Initialize the Halloween Store
+function halloween_store_init() {
+	//register the products custom post type
+	$labels = array(
+		'name' => __( 'Products', 'halloween-plugin' ),
+		'singular_name' => __( 'Product', 'halloween-plugin' ),
+		'add_new' => __( 'Add New', 'halloween-plugin' ),
+		'add_new_item' => __( 'Add New Product', 'halloween-plugin' ),
+		'edit_item' => __( 'Edit Product', 'halloween-plugin' ),
+		'new_item' => __( 'New Product', 'halloween-plugin' ),
+		'all_items' => __( 'All Products', 'halloween-plugin' ),
+		'view_item' => __( 'View Product', 'halloween-plugin' ),
+		'search_items' => __( 'Search Products', 'halloween-plugin' ),
+		'not_found' =>  __( 'No products found', 'halloween-plugin' ),
+		'not_found_in_trash' => __( 'No products found in Trash', 'halloween-plugin' ),
+		'menu_name' => __( 'Products', 'halloween-plugin' )
+	  );
+	
+	  $args = array(
+		'labels' => $labels,
+		'public' => true,
+		'publicly_queryable' => true,
+		'show_ui' => true, 
+		'show_in_menu' => true, 
+		'query_var' => true,
+		'rewrite' => true,
+		'capability_type' => 'post',
+		'has_archive' => true, 
+		'hierarchical' => false,
+		'menu_position' => null,
+		'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt' )
+	  ); 
+	  
+	  register_post_type( 'halloween-products', $args );
+}
+
+
+Notice that you are wrapping each translatable term in the ()translation function. 
+This allows users to translate the terms into any language they want. 
+You’ll see these translation functions used throughout this plugin example.
+Now you’ll create the Halloween Store settings page. 
+The first step is to add a Settings submenu item for your settings page using the add_options_page().
+
+
+// Action hook to add the post products menu item
+add_action( 'admin_menu', 'halloween_store_menu' );
+//create the Halloween Masks sub-menu
+function halloween_store_menu() {
+	
+    add_options_page( __( 'Halloween Store Settings Page', 'halloween-plugin' ), __( 'Halloween Store Settings', 'halloween-plugin' ), 'manage_options', 'halloween-store-settings', 'halloween_store_settings_page' );
+	
+}
+
+
+
+As you can see, this function is used to create your submenu item. 
+Your Halloween Store Settings submenu item will be located at the bottom of the Settings menu in your Dashboard. 
+You also set this menu item to be viewable by an administrator only. 
+Now you need to build the actual settings page. 
+As shown in the preceding code, the Halloween Store Settings page triggers your custom halloween_store_settings_page() function.
+
+
+
+//build the plugin settings page
+function halloween_store_settings_page() {
+	
+    //load the plugin options array
+    $hween_options_arr = get_option( 'halloween_options' );
+	
+	//set the option array values to variables
+	$hs_inventory = ( ! empty( $hween_options_arr['show_inventory'] ) ) ? $hween_options_arr['show_inventory'] : '';
+	$hs_currency_sign = $hween_options_arr['currency_sign'];
+    ?>
+    <div class="wrap">
+    <h2><?php _e( 'Halloween Store Options', 'halloween-plugin' ) ?></h2>
+
+    <form method="post" action="options.php">
+        <?php settings_fields( 'halloween-settings-group' ); ?>
+        <table class="form-table">
+            <tr valign="top">
+            <th scope="row"><?php _e( 'Show Product Inventory', 'halloween-plugin' ) ?></th>
+            <td><input type="checkbox" name="halloween_options[show_inventory]" <?php echo checked( $hs_inventory, 'on' ); ?> /></td>
+            </tr>
+
+            <tr valign="top">
+            <th scope="row"><?php _e( 'Currency Sign', 'halloween-plugin' ) ?></th>
+            <td><input type="text" name="halloween_options[currency_sign]" value="<?php echo esc_attr( $hs_currency_sign ); ?>" size="1" maxlength="1" /></td>
+            </tr>
+        </table>
+
+        <p class="submit">
+        <input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'halloween-plugin' ); ?>" />
+        </p>
+
+    </form>
+    </div>
+<?php
+}
+
+Create Database Tables
+
+The first step in making your plugin create database tables automatically is to create a PHP function within your plugin that adds a table or tables to the WordPress MySQL/MariaDB database. 
+For purposes of this article, we'll assume you want to call this function
+ jal_install. 
+
+
+Database Table Prefix
+
+In the wp-config.php file, a WordPress site owner can define a database table prefix. 
+By default, the prefix is "wp_", but you'll need to check on the actual value and use it to define your database table name. 
+This value is found in the $wpdb->prefix variable. 
+(If you're developing for a version of WordPress older than 2.0, you'll need to use the $table_prefix global variable, which is deprecated in version 2.1).
+
+So, if you want to create a table called (prefix)liveshoutbox, the first few lines of your table-creation function will be: 
+
+function jal_install () {
+   global $wpdb;
+
+   $table_name = $wpdb->prefix . "liveshoutbox"; 
+}
+
+<?php
+
+global $jal_db_version;
+$jal_db_version = '1.0';
+
+function jal_install() {
+	global $wpdb;
+	global $jal_db_version;
+
+	$table_name = $wpdb->prefix . 'liveshoutbox';
+	
+	$charset_collate = $wpdb->get_charset_collate();
+
+	$sql = "CREATE TABLE $table_name (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		name tinytext NOT NULL,
+		text text NOT NULL,
+		url varchar(55) DEFAULT '' NOT NULL,
+		PRIMARY KEY  (id)
+	) $charset_collate;";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $sql );
+
+	add_option( 'jal_db_version', $jal_db_version );
+}
+
+function jal_install_data() {
+	global $wpdb;
+	
+	$welcome_name = 'Mr. WordPress';
+	$welcome_text = 'Congratulations, you just completed the installation!';
+	
+	$table_name = $wpdb->prefix . 'liveshoutbox';
+	
+	$wpdb->insert( 
+		$table_name, 
+		array( 
+			'time' => current_time( 'mysql' ), 
+			'name' => $welcome_name, 
+			'text' => $welcome_text, 
+		) 
+	);
+}
+
+Calling the functions
+
+register_activation_hook( __FILE__, 'jal_install' );
+register_activation_hook( __FILE__, 'jal_install_data' );
+
+DATABASE QUERY 
+
+$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs}", ARRAY_A );
+
+
+Hooks (Actions and Filters) #
+
+Both action and filter hooks should be documented on the line immediately preceding the call to do_action() or do_action_ref_array(), or apply_filters() or apply_filters_ref_array(), and formatted as follows:
+action hooks return nothing, and filter hooks always return their first parameter.
+
+
+Summary: A brief, one line explanation of the purpose of the hook. Use a period at the end.
+Description: A supplemental description to the summary, if warranted.
+ignore Used when a hook is meant only for internal use and should be skipped from parsing.
+since x.x.x: Should always be 3-digit (e.g. @since 3.9.0). Exception is @since MU.
+param: If the parameter is an array of arguments, document each argument using a hash notation (described above in the Parameters That Are Arrays section), and include a period at the end of each line.
+
+/**
+ * Summary.
+ *
+ * Description.
+ *
+ * @since x.x.x
+ *
+ * @param type  $var Description.
+ * @param array $args {
+ *     Short description about this hash.
+ *
+ *     @type type $var Description.
+ *     @type type $var Description.
+ * }
+ * @param type  $var Description.
+ */
+
+
+Hooks another way
+Hooks are a way for one piece of code to interact/modify another piece of code. 
+They make up the foundation for how plugins and themes interact with WordPress Core, but they’re also used extensively by Core itself.
+
+There are two types of hooks: Actions and Filters. 
+To use either, you need to write a custom function known as a Callback, and then register it with WordPress hook for a specific Action or Filter.
+
+Actions allow you to add data or change how WordPress operates. 
+Callback functions for Actions will run at a specific point in in the execution of WordPress, 
+and can perform some kind of a task, like echoing output to the user or inserting something into the database.
+
+Filters give you the ability to change data during the execution of WordPress. 
+Callback functions for Filters will accept a variable, modify it, and return it. 
+They are meant to work in an isolated manner, and should never have side effects such as affecting global variables and output.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Theme Development--------
+
+
+WordPress Themes are files that work together to create the design and functionality of a WordPress site. 
+Each Theme may be different, offering many choices for site owners to instantly change their website look. 
+
+ Why else should you build a WordPress Theme? 
+
+    To create a unique look for your WordPress site.
+    To take advantage of templates, template tags, and the WordPress Loop to generate different website results and looks.
+    To provide alternative templates for specific site features, such as category pages and search result pages.
+    To quickly switch between two site layouts, or to take advantage of a Theme or style switcher to allow site owners to change the look of your site.
+
+A WordPress Theme has many benefits, too
+
+
+    It separates the presentation styles and template files from the system files so the site will upgrade without drastic changes to the visual presentation of the site.
+    It allows for customization of the site functionality unique to that Theme.
+    It allows for quick changes of the visual design and layout of a WordPress site.
+    It removes the need for a typical WordPress site owner to have to learn CSS, HTML, and PHP in order to have a great-looking website.
+
+
+Theme Development Standards
+
+
+    Use well-structured, error-free PHP and valid HTML. See WordPress Coding Standards.
+    Use clean, valid CSS. See CSS Coding Standards.
+    Follow design guidelines in Site Design and Layout.
+
+Plugin API Hooks
+
+When developing Themes, it's good to keep in mind that your Theme should be set up so that it can work well with any WordPress plugins users might decide to install. 
+Plugins add functionality to WordPress via "Action Hooks" (see Plugin API for more information).
+
+Most Action Hooks are within the core PHP code of WordPress, so your Theme does not have to have any special tags for them to work. 
+But a few Action Hooks do need to be present in your Theme, in order for Plugins to display information directly in your header, footer, sidebar, or in the page body. 
+Here is a list of the special Action Hook Template Tags you need to include: 
+
+
+wp_enqueue_scripts
+
+    Used in the theme functions file. Used to load external scripts and stylesheets. 
+
+wp_head()
+
+    Goes in the <head> element of a theme, in header.php. Example plugin use: add JavaScript code. 
+
+ wp_footer()
+    	Goes in footer.php, just before the closing </body> tag. 
+	Example plugin use: insert PHP code that needs to run after everything else, at the bottom of the footer. 
+	Very commonly used to insert web statistics code, such as Google Analytics.
+
+
+wp_meta()
+    Typically goes in the <li>Meta</li> section of a Theme's menu or sidebar; sidebar.php template. Example plugin use: include a rotating advertisement or a tag cloud. 
+
+
+comment_form()
+    Goes in comments.php directly before the file's closing tag (</div>). Example plugin use: display a comment preview. 
+
+
+
+
+Theme Classes
+
+body_class( string|array $class = '' )
+
+Parameters #
+
+$class
+ (string|array) (Optional) One or more classes to add to the class list.
+ Default value: ''
+
+Source #Source
+File: wp-includes/post-template.php	
+
+function body_class( $class = '' ) {
+    // Separates classes with a single space, collates classes for body element
+    echo 'class="' . join( ' ', get_body_class( $class ) ) . '"';
+}
+
+
+
+Basic Usage
+The following example shows how to implement the body_class template tag into a theme.
+<body <?php body_class(); ?>>
+
+
+The actual HTML output might resemble something like this (the About the Tests page from the Theme Unit Test):
+<body class="page page-id-2 page-parent page-template-default logged-in">
+
+In the WordPress Theme stylesheet, add the appropriate styles, such as:
+.page {
+    /* styles for all posts within the page class */
+}
+.page-id-2 {
+    /* styles for only page ID number 2 */
+}
+.logged-in {
+    /* styles for all pageviews when the user is logged in */
+}
+
+To add more classes, the template tag’s parameter can be added. For example, to add a unique class to the same template used above:
+<body <?php body_class( 'class-name' ); ?>>
+<body class="page page-id-2 page-parent page-template-default logged-in class-name">
+You can add additional body classes by filtering the {@see ‘body_class’} hook.
+
+Add New Classes via Filter
+To add the following to the WordPress Theme functions.php file, changing my_class_names and class-name to meet your needs:
+// Add specific CSS class by filter.
+ 
+add_filter( 'body_class', function( $classes ) {
+    return array_merge( $classes, array( 'class-name' ) );
+} );
+
+Remove Classes via Filters
+You can add additional body classes by filtering the {@see ‘body_class’} hook.
+
+Remove an existing body class by un-setting the key from the $classes array.
+
+// Removes a class from the body_class array.
+ 
+add_filter( 'body_class', function( $classes ) {
+    if ( isset( $classes['class-to-remove'] ) ) {
+        unset( $classes['class-to-remove'] );
+    }
+    return $classes;
+} );
+
+post class()----->
+
+Usage
+<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+
+Description
+
+WordPress theme authors who want to have finer css control options for their post styling, have the post_class function available. 
+When the post_class function is added to a tag within the loop, for example <div <?php post_class(); ?> >, it will print out and add various post-related classes to the div tag. 
+It can also be used outside the loop with the optional post_id parameter. 
+This function is typically used in the index.php, single.
+php, and other template files that feature hierarchical post listings.
+
+If you would prefer to have the post classes returned instead of echoed, you would want to use get_post_class().
+Note: get_post_class() does not return a string, but an array that must be processed to produce text similar to what is echoed by post_class()
+
+The post_class may include one or more of the following values for the class attribute, dependent upon the pageview. 
+
+    .post-[id]
+    .[post-type]
+    .type-[post-type]
+    .status-[post-status]
+    .format-[post-format] (default to 'standard')
+    .post-password-required
+    .post-password-protected
+    .has-post-thumbnail
+    .sticky
+    .hentry (hAtom microformat pages)
+    .[taxonomy]-[taxonomy-slug] (includes category)
+    .tag-[tag-name]
+
+
+The actual HTML output might resemble something like this for a post in the "dancing" category: 
+
+<div id="post-4564" class="post post-4564 category-48 category-dancing logged-in">
+
+Or you can use an array with classes: 
+
+<?php
+	$classes = array(
+		'class1',
+		'class2',
+		'class3',
+	);
+?>
+
+<div id="post-<?php the_ID(); ?>" <?php post_class( $classes ); ?>>
+
+
+Add Classes By Filters
+
+// add category nicenames in body and post class
+function category_id_class( $classes ) {
+	global $post;
+	foreach ( ( get_the_category( $post->ID ) ) as $category ) {
+		$classes[] = $category->category_nicename;
+	}
+	return $classes;
+}
+add_filter( 'post_class', 'category_id_class' );
+add_filter( 'body_class', 'category_id_class' );
+
+
+Display Posts Outside of the Loop.
+<?php post_class( '', $post_id ); ?>
+
+Source Code
+post_class() is located in wp-includes/post-template.php. 
+
+
+
+
+comment_class()--->
+Description
+
+This function displays comment classes, which will help theme authors perform simpler styling.
+
+Usage
+Default usage:
+<?php comment_class(); ?>
+
+With all parameters:
+<?php comment_class( $class, $comment_id, $post_id, $echo ) ?>
+
+Examples
+<li <?php comment_class(); ?> id="li-comment-<?php comment_ID() ?>">
+
+
+Codex
+
+Codex tools: Log in
+Attention Interested in functions, hooks, classes, or methods? Check out the new WordPress Code Reference!
+Function Reference/comment class
+
+Languages: English • ??? • (Add your language)
+Contents
+
+    1 Description
+    2 Usage
+    3 Parameters
+    4 Returns
+    5 Examples
+    6 Notes
+    7 Change Log
+    8 Source File
+    9 Related
+
+Description
+
+This function displays comment classes, which will help theme authors perform simpler styling.
+
+See also post_class() for more details.
+Usage
+
+Default usage:
+<?php comment_class(); ?>
+
+With all parameters:
+<?php comment_class( $class, $comment_id, $post_id, $echo ) ?>
+
+Parameters
+
+$class
+    (string/array) (optional) One or more classes to add to the class list
+
+        Default: Empty string 
+
+$comment_id
+    (integer) (optional) A comment ID
+
+        Default: null 
+
+$post_id
+    (integer) (optional) A post ID
+
+        Default: null 
+
+$echo
+    (boolean) (optional) Whether comment_class should echo or return
+
+        Default: true 
+
+
+example
+https://core.trac.wordpress.org/browser/tags/4.7/src/wp-includes/post-template.php#L555
+sources
+https://codex.wordpress.org/Theme_Development#_Theme_Functions_File
+
+
+
+
+
+
+
+
+Plugin API
+
+
+1)Hooks, Actions and Filters
+
+Hooks are provided by WordPress to allow your plugin to 'hook into' the rest of WordPress; 
+that is, to call functions in your plugin at specific times, and thereby set your plugin in motion. 
+There are two kinds of hooks:
+
+
+
+ 1)   Actions (Codex Action Reference)
+ 2)  Filters (Codex Filter Reference)
+
+
+add_action( string $tag, callable $function_to_add, int $priority = 10, int $accepted_args = 1 )
+Hooks a function on to a specific action.
+
+
+Description #Description
+
+Actions are the hooks that the WordPress core launches at specific points during execution, or when specific events occur. 
+Plugins can specify that one or more of its PHP functions are executed at these points, using the Action API.
+
+
+function add_action($tag, $function_to_add, $priority = 10, $accepted_args = 1) {
+    return add_filter($tag, $function_to_add, $priority, $accepted_args);
+}
+
+
+
+
+
+
+
+
+
+
+
+

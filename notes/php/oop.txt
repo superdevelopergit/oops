@@ -1,0 +1,20 @@
+
+resources
+https://en.wikipedia.org/wiki/Class_(computer_programming).
+http://study.com/academy/lesson/oop-object-oriented-programming-objects-classes-interfaces.html
+https://danielpataki.com/flight-php/
+
+----------------------------------------------       Class     ----------------------------------------
+ (constituents ????? )
+
+In object-oriented programming, a class is an extensible program-code-template for creating objects, providing initial values for state (member variables) and implementations of behavior (member functions or methods).
+When an object is created by a constructor of the class, the resulting object is called an instance of the class, and the member variables specific to the object are called instance variables, to contrast with the class variables shared across the class.
+
+->Structure
+
+A class contains data field descriptions (or properties, fields, data members, or attributes).
+
+
+->Behavior
+
+The behavior of class or its instances is defined using methods. Methods are subroutines with the ability to operate on objects or classes.
