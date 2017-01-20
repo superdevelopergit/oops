@@ -1,0 +1,246 @@
+Plugin Basics-
+
+At its simplest, a WordPress plugin is a PHP file with a WordPress plugin header comment. 
+It’s highly recommended that you create a directory to hold your plugin so that all of your plugin’s files are neatly organized in one place.
+
+
+To get started creating a new plugin, follow the steps below.
+
+    Navigate to your WordPress installation’s wp-content directory.
+    Open the plugins directory.
+    Create a new directory and name it after your plugin (e.g. plugin-name).
+    Open your new plugin’s directory.
+    Create a new PHP file (it’s also good to name this file after your plugin, e.g. plugin-name.php).
+
+
+
+plugin header comment-->
+
+
+This is a specially formatted PHP block comment that contains metadata about your plugin, such as its name and author.  
+At the very least, the plugin header comment must contain the name of your plugin.
+
+<?php
+/*
+Plugin Name: YOUR PLUGIN NAME
+*/
+
+
+Hooks: Actions and Filters #Hooks: Actions and Filters
+
+WordPress hooks allow you to tap into WordPress at specific points to change how WordPress behaves without editing any core files.
+
+
+
+Basic Hooks #Basic Hooks
+
+The 3 basic hooks you’ll need when creating a plugin are the 
+register_activation_hook(), 
+register_deactivation_hook() 
+and the register_uninstall_hook().
+
+The activation hook is run when you activate your plugin. 
+You would use this to provide a function to set up your plugin — for example, creating some default settings in the options table.
+
+The deactivation hook is run when you deactivate your plugin. 
+You would use this to provide a function that clears any temporary data stores by your plugin.
+
+These uninstall methods are used to clean up after your plugin is deleted using the WordPress Admin. 
+You would use this to delete all data created by your plugin, such as any options that were added to the options table.
+
+
+
+A valid PHP file with a header comment might look like this:
+
+
+
+<?php
+/*
+Plugin Name: WordPress.org Plugin
+Plugin URI:  https://developer.wordpress.org/plugins/the-basics/
+Description: Basic WordPress Plugin Header Comment
+Version:     20160911
+Author:      WordPress.org
+Author URI:  https://developer.wordpress.org/
+License:     GPL2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+
+
+
+Activation / Deactivation Hooks
+
+
+On activation, plugins can run a routine to add rewrite rules, add custom database tables, or set default option values.
+
+Activation #
+To set up an activation hook, use the register_activation_hook() function:
+register_activation_hook( string $file, callable $function )
+
+
+Parameters #Parameters
+
+$file
+
+    (string) (Required) The filename of the plugin including the path.
+$function
+
+    (callable) (Required) The function hooked to the 'activate_PLUGIN' action.
+
+File: wp-includes/plugin.php
+
+function register_activation_hook($file, $function) {
+    $file = plugin_basename($file);
+    add_action('activate_' . $file, $function);
+}
+
+register_activation_hook( __FILE__, 'pluginprefix_function_to_run' );
+
+function pluginprefix_setup_post_types()
+{
+    // register the "book" custom post type
+    register_post_type( 'book', ['public' => 'true'] );
+}
+add_action( 'init', 'pluginprefix_setup_post_type' );
+ 
+function pluginprefix_install()
+{
+    // trigger our function that registers the custom post type
+    pluginprefix_setup_post_types();
+ 
+    // clear the permalinks after the post type has been registered
+    flush_rewrite_rules();
+}
+register_activation_hook( __FILE__, 'pluginprefix_install' );
+
+
+Deactivation #
+
+register_deactivation_hook( __FILE__, 'pluginprefix_function_to_run' );
+
+The first parameter in each of these functions refers to your main plugin file, 
+which is the file in which you have placed the plugin header comment.
+ Usually these two functions will be triggered from within the main plugin file; however,
+ if the functions are placed in any other file, you must update the first parameter to correctly point to the main plugin file.
+
+
+function pluginprefix_deactivation()
+{
+    // our post type will be automatically removed, so no need to unregister it
+ 
+    // clear the permalinks to remove our post type's rules
+    flush_rewrite_rules();
+}
+register_deactivation_hook( __FILE__, 'pluginprefix_deactivation' );
+
+
+
+add_action
+
+add_action( string $tag, callable $function_to_add, int $priority = 10, int $accepted_args = 1 )
+
+
+$tag
+
+    (string) (Required) The name of the action to which the $function_to_add is hooked.
+$function_to_add
+
+    (callable) (Required) The name of the function you wish to be called.
+$priority
+
+    (int) (Optional) Used to specify the order in which the functions associated with a particular action are executed. Lower numbers correspond with earlier execution, and functions with the same priority are executed in the order in which they were added to the action.
+
+    Default value: 10
+$accepted_args
+
+    (int) (Optional) The number of arguments the function accepts.
+
+    Default value: 1
+
+
+function add_action($tag, $function_to_add, $priority = 10, $accepted_args = 1) {
+    return add_filter($tag, $function_to_add, $priority, $accepted_args);
+}
+
+
+More Information #
+
+
+Usage #Usage
+
+
+add_action( $hook, $function_to_add, $priority, $accepted_args );
+
+
+To find out the number and name of arguments for an action, simply search the code base for the matching do_action() call.
+ For example, if you are hooking into ‘save_post’, you would find it in post.php:
+ do_action( 'save_post', $post_ID, $post, $update );
+
+Your add_action call would look like:
+add_action( 'save_post', 'wpdocs_my_save_post', 10, 3 );
+
+
+And your function would be:
+
+function wpdocs_my_save_post( $post_ID, $post, $update ) {
+   // do stuff here
+}
+
+
+Using with a Class
+
+
+To use add_action() when your plugin or theme is built using classes, you need to use the array callable syntax.
+ You would pass the function to add_action() as an array, with $this as the first element, then the name of the class method, like so:
+/**
+ * Class WP_Docs_Class.
+ */
+class WP_Docs_Class {
+ 
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        add_action( 'save_post', array( $this, 'wpdocs_save_posts' ) );
+    }
+ 
+    /**
+     * Handle saving post data.
+     */
+    public function wpdocs_save_posts() {
+        // do stuff here...
+    }
+}
+ 
+$wpdocsclass = new WP_Docs_Class();
+
+Using with static functions in a class
+
+
+If the class is called staticly the approach has to be like below as $this is not available. 
+This also works if class is extended. Use the following:
+
+/**
+ * Class WP_Docs_Static_Class.
+ */
+class WP_Docs_Static_Class {
+ 
+    /**
+     * Initializer for setting up action handler
+     */
+    public static function init() {
+        add_action( 'save_post', array( get_called_class(), 'wpdocs_save_posts' ) );
+    }
+ 
+    /**
+     * Handler for saving post data.
+     */
+    public static function wpdocs_save_posts() {
+        // do stuff here...
+    }
+}
+ 
+WP_Docs_Static_Class::init();
+
+
+
