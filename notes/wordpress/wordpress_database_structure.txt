@@ -1,0 +1,108 @@
+WordPress Database  Desciption 
+
+1)	Table Name	-	wp_commentmeta
+	Description	-	Each comment features information called the meta data and it is stored in the wp_commentmeta. 
+	WordPress User Interface -      Administration > Comments > Comments.
+
+Table Details
+
+The following are the specific fields in each of the tables created during the standard WordPress installation. 
+
+Field		Type			Null		Key		Default		Extra
+
+meta_id		bigint(20) unsigned				PRI				auto_increment 
+
+comment_id	bigint(20) unsigned				IND		0	
+
+meta_key	 	varchar(255) 		YES 		IND 		NULL	
+
+meta_value 	longtext 			YES 	  			NULL 
+
+
+
+2)	Table Name	-	wp_comments
+	Description	-	The comments within WordPress are stored in the wp_comments table. 
+	WordPress User Interface -      Administration > Comments > Comments.
+
+
+Fields	-	comment_ID(pri)
+	-	comment_post_ID
+	-	comment_author
+	-	comment_author_email
+	-	comment_author_url
+	-	comment_author_IP
+	-	comment_date
+	-	comment_date_gmt
+	-	comment_content
+	-	comment_karma
+	-	comment_approved
+	-	comment_agent
+	-	comment_type
+	-	comment_parent
+	-	user_id
+
+
+3)	Table Name	-	wp_links
+	Description	-	The wp_links holds information related to the links entered into the Links feature of WordPress. (This feature has been deprecated, but can be re-enabled with the Links Manager plugin.). 
+	WordPress User Interface -       Administration > Links > Add New.
+			-	Administration > Links > Links.
+
+
+4)	Table Name	-	wp_options
+	Description	-	The Options set under the Administration > Settings panel are stored in the wp_options table. See Option Reference for option_name and default values.
+	WordPress User Interface  -	
+					Administration > Settings > General
+   					 Administration > Settings > Writing
+    					Administration > Settings > Reading
+    					Administration > Settings > Discussion
+   					 Administration > Settings > Privacy
+    					Administration > Settings > Permalinks
+    					Administration > Appearance > Widgets
+
+5)	Table Name	-	wp_postmeta
+	Description	-	TEach post features information called the meta data and it is stored in the wp_postmeta. Some plugins may add their own information to this table. 
+	WordPress User Interface -      
+    				Administration > Posts > Add New
+    				Administration > Pages > Add New
+
+6)	Table Name	-	wp_posts
+	Description	-	The core of the WordPress data is the posts. It is stored in the wp_posts table. Also Pages and navigation menu items are stored in this table.
+	WordPress User Interface -       
+    				Administration > Posts > Add New
+    				Administration > Posts > Posts
+   				 Administration > Pages > Add New
+    				Administration > Pages > Pages
+    				Administration > Media > Add New
+   				 Administration > Media > Library
+    				Administration > Appearance > Menus
+
+
+7)	Table Name	-	wp_terms
+	Description	-	The categories for both posts and links and the tags for posts are found within the wp_terms table. 
+	WordPress User Interface -      
+    				 Administration > Posts > Post Tags
+				Administration > Posts > Categories
+				Administration > Links > Link Categories 
+				 Administration > Posts > Add New
+
+8)	Table Name		-	wp_term_relationships	 
+	Description		 -	Posts are associated with categories and tags from the wp_terms table and this association is maintained in the wp_term_relationships table. The association of links to their respective categories are also kept in this table.
+				-	 Administration > Posts > Posts
+					Administration > Pages > Add New
+					Administration > Page > Pages 	
+
+ 
+9)	Table Name		-	wp_term_taxonomy	 
+	Description		 -	This table describes the taxonomy (category, link, or tag) for the entries in the wp_terms table. 
+					
+
+10)	Table Name		-	wp_usermeta
+	Description		 -	Each user features information called the meta data and it is stored in wp_usermeta.  
+	WordPress User Interface 	-	Administration > Users
+
+11)	Table Name		-	wp_users
+	Description		 -	The list of users is maintained in table wp_users. 
+	WordPress User Interface 	-	Administration > Users
+
+
+
