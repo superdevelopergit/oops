@@ -1,0 +1,135 @@
+
+What is a shopify?
+
+Shopify is a Canadian e-commerce company headquartered in Ottawa, Ontario, that develops computer software for online stores and retail point-of-sale systems.[2]
+
+Shopify was founded in 2004, and was initially based on earlier software written by its founders for their online snowboard store.[3][4] The company reports that it has 300,000 merchants using its platform,[5] with total gross merchandise volume exceeding $10 billion.
+
+
+
+
+Shopify Features----
+
+Although you will probably need to install apps to make the most of the platform, Shopify offers significantly more free options. 
+From the very start Shopify allows you to have:
+
+    Unlimited number of products
+    Unlimited file storage
+    Automatic fraud analysis
+    Manual order creation
+    Discount codes
+    Blog module
+    Free SSL certificate
+    Mobile commerce optimization
+    Editable HTML and CSS
+    Credit card payments
+    Multiple languages
+    Adjustable shipping rates and taxes
+    Customer profiles
+    Drop shipping capabilities
+    SEO-ready site structure
+    Individual product reviews
+    Facebook selling module
+    Social media integration
+    Physical and digital products in the store
+    Unlimited traffic to your store
+    Daily backups
+    Site stats and product reports
+    Fully featured mobile app
+    Product importing via CSV files
+    Different product variations
+    Print orders
+    Gift cards (on Professional and Unlimited)
+    Abandoned cart recovery (on Professional and Unlimited)
+
+
+
+Pros and cons of shopify 
+
+1)
+Pros:
+
+    Speed and security – Shopify is integrated with payment providers, and its built-in speed checkout allows customers to pay with minimal load time.
+    Marketing – Shopify allows custom Title tags, meta descriptions on every category page for SEO purpose and also allows you to build customized landing pages for marketing purpose.
+    Design – Shopify offers multiples free themes and numerous custom-built premium themes along with the option to customize and add features for Developers.
+    App Store – Shopify App store has all the features that you need to run an online business. It provides various free and paid Apps and adds flexibility for the brands having an online presence all around the web.
+
+Cons:
+
+    Pricing – Shopify’s basic plan starts from $29 a month; the average plan is for $79 a month, and advanced Shopify is for $299 a month.
+    Customization Hacking – Shopify uses a different set up to customize their themes rather than using PHP for their templates. It might be a problem for first timers on Shopify.
+    Content Marketing – Shopify’s blogging platform is not as great as WordPress as it provides a basic layout for blogging.
+    Lock-In feature – Lock-in features to delete your online store permanently. Shifting from Shopify to another online store may not be a very smooth journey.
+
+
+
+2)
+
+Pros:
+
+    VERY easy to get an MVP/simple store up and running
+    Completely hosted so if you are non-tech you don't need to get involved in the technical details of servers, hosting, etc
+    Not bad for SEO (it's improved)
+    Reasonable support
+    Pretty easy to customize if you know a little bit of web programming
+
+
+Cons:
+
+    Heavily skewed towards North America/UK merchants - not so good for anyone else in terms of features/language available
+    Not multi-language - requires several hacks/workarounds and not really workable in reality
+    No one-page checkout - can hurt conversion rates
+    Cost can rise dramatically once you add some 'apps' which really should be baked into the core platform (eg, reviews, social login)
+    Limited payment gateways for the non-major markets (USA, Canada, UK)
+
+
+3)
+PROS:
+
+    Several free, beautiful themes.
+
+    Solid SEO.
+
+    24/7 customer support (a big plus, since if your store is going to go down it may very well be overnight or on the weekend.)
+
+    Unlimited Bandwidth.
+
+
+Shopify 2 rolled out last year with about 60 new features, and I'd also put several in the pro list:
+
+    Reporting now includes stats on abandoned carts.
+
+    Easy to use live theme editor.
+
+    Great filtering and search.
+
+
+CONS:
+
+    No one-page checkout.
+    No real-time shipping or discounts in less expensive plans.
+    Limited to 100 product variations, although apps can help you work around that.
+
+
+4)
+Pros of shopify are:
+
+1. Built in speed and security for hosting
+2. Great customer support
+3. Good marketing technique
+4. High resolution designs
+
+Cons of shopify are:
+
+1. Its pricing- It has changed its pricing for all its packages which puts a negative impact on its customers.
+
+2. Poor Content marketing- Shopify comes with built-in blogging software…but it’s not the greatest – especially if you are spoiled for WordPress.
+
+3. Initial set up- With the release of Shopify 2 the initial set up of shopify has changed a lot and its not enough to show a huge change in their settings.
+
+In contrast to this many are now taking the help of other ecommerce software for building their own effective online store.
+
+
+
+
+
