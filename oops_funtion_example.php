@@ -10,7 +10,7 @@ class Foo
     public function bar() {
         return 'method';
     }
-	
+	 
 	public function sum($a,$b){
 		return $a+$b;
 	}
