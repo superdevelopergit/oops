@@ -17,7 +17,7 @@ class Foo
 	
 	public function multiple($a,$b){
 		return $a*$b;
-		
+		   
 	}
 	
 	public function sub($a,$b){
