@@ -1,0 +1,3 @@
+Write some code that will flatten an array of arbitrarily nested arrays of integers into a flat array of integers. e.g. [[1,2,[3]],4] -> [1,2,3,4].
+
+Write some code/pseudo code to fetch customer records within 40 miles of our Nottingham office (GPS coordinates 52.951458, -1.142332) from the attached `customer_data.json`. Demonstrate testable/re-usable code and structure.
